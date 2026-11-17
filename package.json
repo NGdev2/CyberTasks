@@ -1,0 +1,8 @@
+{
+  "name": "cybertasks",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "test": "node --test test/"
+  }
+}

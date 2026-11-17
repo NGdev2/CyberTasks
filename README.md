@@ -1,0 +1,51 @@
+# CyberTasks
+
+A productivity widget for [WidgetSystem](https://github.com/NGdev2/WidgetSystem) in the
+style of Cyberpunk 2077's UI. Two views share one database:
+
+- **Daily Jobs**: today's tasks. Add with the input, tick the diamond, right-click a row for
+  more (skip, move to tomorrow, rename, make it a routine). Browse other days with ◁ ▷.
+- **Weekly Schedule**: the whole week (Mon–Sun) plus **week objectives**. Add a job to any
+  day, drag one-off jobs between days, plan ahead with ◁ ▷.
+
+**Routines** (⚙ or right-click → Routines…) repeat by themselves and appear on their days:
+
+| Repeat | Example |
+|---|---|
+| Every day / every N days | Drink water; water plants every 3 days |
+| Days of week | Gym on Mon, Wed, Fri; weekdays only |
+| Day of month | Pay rent on the 1st; review budget on the last day |
+| Date each year | Birthday on Mar 14 (Feb 29 falls on Feb 28 in other years) |
+| On one date | Dentist on Thu 20 Nov |
+| Week goal: every week / one week | "Read 100 pages" every week |
+
+Each routine can have a start date, an end date and a pause switch. The editor previews its
+next dates and shows its streak.
+
+**Options:** carry over unfinished jobs, completed jobs at the bottom, morning briefing and
+evening reminder notifications, celebration banner, glitch effects, decorative elements.
+
+## Install
+
+```bash
+widgetctl path add /path/to/CyberTasks
+widgetctl add cybertasks:day
+widgetctl add cybertasks:week
+```
+
+Or use the WidgetSystem gallery (✦ → Add widget…): "Daily Jobs" and "Weekly Schedule".
+
+From scripts: `widgetctl send cybertasks '{"add":"Buy milk"}'` adds a job for today, and
+`'{"open":"routines"}'` opens the editor.
+
+## Development
+
+- `src/schedule.js` is the pure recurrence engine. Its data model is in
+  [docs/DATA_MODEL.md](docs/DATA_MODEL.md). Run the tests with `npm test` (`node --test`, no dependencies).
+- `src/day.js`, `src/week.js`, `src/editor.js` and `src/rows.js` are the views. `style.css`
+  is the design kit.
+- Saving any file hot-reloads the widget. Data lives in WidgetSystem's storage
+  (`~/.local/share/widgetsystem/storage/w-cybertasks.json`).
+
+Fonts: Rajdhani and Share Tech Mono, both under the SIL Open Font License (licenses in
+`assets/fonts/`). Not affiliated with CD PROJEKT RED.

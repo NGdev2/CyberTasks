@@ -1,0 +1,34 @@
+{
+  "id": "cybertasks",
+  "name": "CyberTasks",
+  "version": "0.1.0",
+  "description": "Daily and weekly jobs with routines, in Night City style.",
+  "icon": "assets/icon.svg",
+  "entry": "main.js",
+  "styles": ["style.css"],
+  "size": { "w": 360, "h": 440, "minW": 280, "minH": 240 },
+  "frame": {
+    "look": "clear",
+    "border": false,
+    "shadow": false,
+    "radius": 0,
+    "padding": 0,
+    "controls": false
+  },
+  "expandable": true,
+  "multiInstance": true,
+  "variants": [
+    {
+      "id": "day",
+      "name": "Daily Jobs",
+      "description": "Today's tasks: add, tick off, carry over. Routines appear on their days by themselves.",
+      "size": { "w": 360, "h": 440, "minW": 280, "minH": 240 }
+    },
+    {
+      "id": "week",
+      "name": "Weekly Schedule",
+      "description": "The whole week at a glance, plus week objectives. Plan ahead and drag tasks between days.",
+      "size": { "w": 940, "h": 360, "minW": 620, "minH": 260 }
+    }
+  ]
+}
