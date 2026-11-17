@@ -67,8 +67,16 @@ export function openEditor(app, opts = {}) {
   }
 
   // A small widget opens the editor full screen and returns afterwards.
-  const expandedByUs = !ctx.frame.isExpanded() && (root.clientWidth < 760 || root.clientHeight < 480);
-  if (expandedByUs) ctx.frame.expand();
+  // A small widget opens the editor full screen and returns afterwards. After a hot reload the
+  // frame is still expanded, so the resumed editor keeps responsibility for collapsing it.
+  const expandedByUs = opts.resumeExpandedByUs && ctx.frame.isExpanded()
+    ? true
+    : !ctx.frame.isExpanded() && (root.clientWidth < 760 || root.clientHeight < 480);
+  if (expandedByUs && !ctx.frame.isExpanded()) ctx.frame.expand();
+
+  // Remember that the editor is open (refreshed while open) so a hot reload can restore it.
+  const persist = () => ctx.storage.set('editor', { tab: state.tab, sel: state.sel, expandedByUs, at: Date.now() });
+  const stopBeat = ctx.every(5000, persist);
 
   const tabs = h('nav', { class: 'ct-ed-tabs' });
   const body = h('div', { class: 'ct-ed-body' });
@@ -91,6 +99,7 @@ export function openEditor(app, opts = {}) {
   };
 
   function render() {
+    persist();
     tabs.replaceChildren(
       h('span', { class: 'num' }, '1'),
       ...[['routines', 'Routines'], ['options', 'Options']].map(([id, label]) =>
@@ -162,6 +171,7 @@ export function openEditor(app, opts = {}) {
 
   function renderForm() {
     if (!formEl) return;
+    persist();
     const it = item();
     formEl.replaceChildren();
     if (!it) { formEl.append(h('div', { class: 'ct-empty' }, h('b', {}, 'Select a routine'), 'or create a new one')); return; }
@@ -334,7 +344,8 @@ export function openEditor(app, opts = {}) {
   function close(fromCollapse = false) {
     if (closed) return;
     closed = true;
-    unsub(); offKey(); offCollapse();
+    unsub(); offKey(); offCollapse(); stopBeat();
+    ctx.storage.delete('editor');
     ed.remove();
     if (expandedByUs && !fromCollapse) ctx.frame.collapse();
   }

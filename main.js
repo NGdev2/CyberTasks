@@ -47,6 +47,11 @@ export async function mount(ctx) {
   applyPrefs();
   store.subscribe(applyPrefs);
 
+  // Reopen an editor that was open a moment ago (hot reload), instead of leaving the frame expanded.
+  const saved = ctx.storage.get('editor');
+  if (saved && Date.now() - saved.at < 15_000) app.openEditor({ tab: saved.tab, select: saved.sel, resumeExpandedByUs: saved.expandedByUs });
+  else if (saved) ctx.storage.delete('editor');
+
   ctx.menu.add({ icon: '↻', label: 'Routines…', action: () => app.openEditor({ tab: 'routines' }) });
   ctx.menu.add({ icon: '⚙', label: 'Options…', action: () => app.openEditor({ tab: 'options' }) });
 
