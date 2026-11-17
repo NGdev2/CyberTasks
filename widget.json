@@ -2,7 +2,7 @@
   "id": "cybertasks",
   "name": "CyberTasks",
   "version": "0.1.0",
-  "description": "Daily and weekly jobs with routines, in Night City style.",
+  "description": "Daily and weekly jobs with routines, in Night Cron style.",
   "icon": "assets/icon.svg",
   "entry": "main.js",
   "styles": ["style.css"],
