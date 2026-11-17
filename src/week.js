@@ -1,6 +1,6 @@
 // Week view: objectives for the week + seven day columns. One-off jobs can be dragged between days.
 import { todayKey, weekKey, addWeeks, addDays, weekOverview, addItem, moveOnce } from './schedule.js';
-import { h, ICON, iconBtn, WEEKDAYS, dayNum, shortDate, weekNumber, microText } from './ui.js';
+import { h, ICON, iconBtn, WEEKDAYS, dayNum, shortDate, weekNumber } from './ui.js';
 import { taskRow, celebrate } from './rows.js';
 
 export function mountWeek(app) {
@@ -74,7 +74,7 @@ export function mountWeek(app) {
         list, add);
       days.append(col);
     }
-    const mt = microText(today);
+    const mt = ctx.ui.micro(today);
     micro.children[1].textContent = `W${weekNumber(wk)} · ${mt.text}`;
     micro.children[1].title = mt.title;
     micro.children[2].textContent = open ? `${open} OPEN` : 'CLEAR';

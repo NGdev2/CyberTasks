@@ -6,31 +6,10 @@ import { mountDay } from './src/day.js';
 import { mountWeek } from './src/week.js';
 import { openEditor } from './src/editor.js';
 
-const FONTS = [
-  ['CT Rajdhani', 'Rajdhani-Regular.ttf', '400'],
-  ['CT Rajdhani', 'Rajdhani-Medium.ttf', '500'],
-  ['CT Rajdhani', 'Rajdhani-SemiBold.ttf', '600'],
-  ['CT Rajdhani', 'Rajdhani-Bold.ttf', '700'],
-  ['CT Mono', 'ShareTechMono-Regular.ttf', '400'],
-];
-
-// @font-face inside a shadow root is unreliable, so fonts go into the page's font set (once).
-function loadFonts(ctx) {
-  if (!window.__ctFonts) {
-    window.__ctFonts = Promise.all(FONTS.map(([family, file, weight]) => {
-      const face = new FontFace(family, `url("${ctx.asset('assets/fonts/' + file)}")`, { weight });
-      document.fonts.add(face);
-      return face.load().catch((e) => ctx.log('font failed', file, String(e)));
-    }));
-  }
-  return window.__ctFonts;
-}
-
 // Messages addressed to the widget id reach every instance with the same data object.
 const handled = new WeakSet();
 
 export async function mount(ctx) {
-  await loadFonts(ctx);
   const store = createStore(ctx);
   const view = ctx.variant === 'week' ? 'week' : 'day';
   const root = h('div', { class: `ct ct-${view}` });

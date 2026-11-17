@@ -742,6 +742,7 @@ test('describeRepeat: day-scope repeat types', () => {
   assert.equal(d({ type: 'weekly', days: [6, 7] }), 'Weekends');
   assert.equal(d({ type: 'weekly', days: [1, 2, 3, 4, 5, 6, 7] }), 'Every day');
   assert.equal(d({ type: 'weekly', days: [1, 2, 3, 4, 6] }), 'Mon, Tue, Wed, Thu, Sat');
+  assert.equal(d({ type: 'weekly', days: [1, 2, 3, 4, 5, 7] }), 'Every day except Sat');
   assert.equal(d({ type: 'monthly', day: 15 }), 'Monthly on the 15th');
   assert.equal(d({ type: 'monthly', day: -1 }), 'Monthly on the last day');
   assert.equal(d({ type: 'yearly', month: 3, day: 14 }), 'Yearly on Mar 14');

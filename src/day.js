@@ -1,6 +1,6 @@
 // Day view: today's jobs (or any day you browse to), quick add, progress segments.
 import { todayKey, addDays, tasksForDay, addItem } from './schedule.js';
-import { h, ICON, iconBtn, dayLabel, microText } from './ui.js';
+import { h, ICON, iconBtn, dayLabel } from './ui.js';
 import { taskRow, celebrate } from './rows.js';
 
 export function mountDay(app) {
@@ -79,7 +79,7 @@ export function mountDay(app) {
     }
 
     const left = active.length - done;
-    const mt = microText(viewDate);
+    const mt = ctx.ui.micro(viewDate);
     micro.children[1].textContent = mt.text;
     micro.children[1].title = mt.title;
     micro.children[2].textContent = left ? `${left} PENDING` : active.length ? 'SYNC OK' : 'IDLE';

@@ -409,6 +409,7 @@ export function describeRepeat(item) {
       if (sig === '1,2,3,4,5,6,7') return 'Every day';
       if (sig === '1,2,3,4,5') return 'Weekdays';
       if (sig === '6,7') return 'Weekends';
+      if (days.length === 6) return `Every day except ${WEEKDAY_NAMES[[1, 2, 3, 4, 5, 6, 7].find((d) => !days.includes(d)) - 1]}`;
       return days.map((d) => WEEKDAY_NAMES[d - 1]).join(', ');
     }
     case 'monthly':

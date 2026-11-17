@@ -47,5 +47,5 @@ From scripts: `widgetctl send cybertasks '{"add":"Buy milk"}'` adds a job for to
 - Saving any file hot-reloads the widget. Data lives in WidgetSystem's storage
   (`~/.local/share/widgetsystem/storage/w-cybertasks.json`).
 
-Fonts: Rajdhani and Share Tech Mono, both under the SIL Open Font License (licenses in
-`assets/fonts/`). Not affiliated with CD PROJEKT RED.
+Colors and fonts come from the WidgetSystem theme (Night Cron by default: Rajdhani and Share Tech
+Mono, both SIL OFL). Not affiliated with CD PROJEKT RED.

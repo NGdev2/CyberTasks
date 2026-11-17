@@ -1,25 +1,30 @@
-/* CyberTasks: Night City design kit. Fonts are registered by main.js as "CT Rajdhani" and "CT Mono". */
+/* CyberTasks design kit. Colors, fonts and shapes follow the WidgetSystem theme (--ws-*);
+   the fallbacks are the Night Cron values, used when no theme provides them. */
 
 /* ================================================================ tokens */
 .ct {
-  --ct-red: #ff5d55;
-  --ct-red-hi: #ff8178;
-  --ct-text: #ff9e95;
-  --ct-text-dim: rgba(255, 140, 130, .55);
-  --ct-line: rgba(255, 93, 85, .6);
-  --ct-line-dim: rgba(255, 93, 85, .22);
-  --ct-fill: rgba(255, 93, 85, .07);
-  --ct-fill-hi: rgba(255, 93, 85, .16);
-  --ct-cyan: #5ef6ff;
-  --ct-cyan-dim: rgba(94, 246, 255, .3);
-  --ct-cyan-fill: rgba(94, 246, 255, .1);
-  --ct-yellow: #fcee0a;
-  --ct-ink: #16060a;                      /* dark text on red/cyan slabs */
-  --ct-bg: rgba(20, 6, 9, .9);
-  --ct-bg-2: rgba(34, 9, 13, .92);
-  --ct-cut: 14px;                         /* chamfer size */
-  --ct-font: "CT Rajdhani", "Rajdhani", "Saira Condensed", "Ubuntu Condensed", sans-serif;
-  --ct-mono: "CT Mono", "Share Tech Mono", ui-monospace, monospace;
+  --ct-red: var(--ws-primary, #ff5d55);
+  --ct-red-hi: color-mix(in srgb, var(--ct-red) 78%, white);
+  --ct-text: var(--ws-fg, #ff9e95);
+  --ct-text-strong: var(--ws-fg-strong, #ffc2bb);
+  --ct-text-dim: var(--ws-fg-muted, rgba(255, 140, 130, .55));
+  --ct-line: var(--ws-edge, rgba(255, 93, 85, .6));
+  --ct-line-dim: var(--ws-border, rgba(255, 93, 85, .22));
+  --ct-fill: var(--ws-surface, rgba(255, 93, 85, .07));
+  --ct-fill-hi: var(--ws-surface-hover, rgba(255, 93, 85, .16));
+  --ct-cyan: var(--ws-cyan, #5ef6ff);
+  --ct-cyan-dim: color-mix(in srgb, var(--ct-cyan) 32%, transparent);
+  --ct-cyan-fill: color-mix(in srgb, var(--ct-cyan) 11%, transparent);
+  --ct-yellow: var(--ws-yellow, #fcee0a);
+  --ct-ink: var(--ws-ink, #16060a);        /* text on red/cyan slabs */
+  --ct-bg: var(--ws-panel-bg, rgba(20, 6, 9, .9));
+  --ct-bg-2: var(--ws-panel, rgba(34, 9, 13, .92));
+  --ct-cut: var(--ws-cut, 14px);           /* chamfer size (0 in Glass) */
+  --ct-radius: var(--ws-radius, 0px);
+  --ct-scan: var(--ws-scan, repeating-linear-gradient(0deg, rgba(255, 255, 255, .022) 0 1px, transparent 1px 3px));
+  --ct-glow: var(--ws-glow, rgba(255, 60, 50, .35));
+  --ct-font: var(--ws-font, "Rajdhani", "Saira Condensed", "Ubuntu Condensed", sans-serif);
+  --ct-mono: var(--ws-font-mono, "Share Tech Mono", ui-monospace, monospace);
 
   position: relative; width: 100%; height: 100%;
   display: flex; flex-direction: column;
@@ -36,14 +41,15 @@
   position: absolute; inset: 0; pointer-events: none;
   clip-path: polygon(0 0, calc(100% - var(--ct-cut)) 0, 100% var(--ct-cut), 100% 100%, var(--ct-cut) 100%, 0 calc(100% - var(--ct-cut)));
   background: var(--ct-line);
-  filter: drop-shadow(0 0 10px rgba(255, 60, 50, .35));
+  filter: drop-shadow(0 0 10px var(--ct-glow));
+  border-radius: var(--ct-radius);
 }
 .ct-shell::before {
   content: ""; position: absolute; inset: 1px;
-  clip-path: inherit;
+  clip-path: inherit; border-radius: inherit;
   background:
-    repeating-linear-gradient(0deg, rgba(255, 255, 255, .022) 0 1px, transparent 1px 3px),   /* scanlines */
-    radial-gradient(120% 80% at 100% 0%, rgba(255, 70, 60, .1), transparent 60%),
+    var(--ct-scan),   /* scanlines */
+    radial-gradient(120% 80% at 100% 0%, color-mix(in srgb, var(--ct-red) 10%, transparent), transparent 60%),
     var(--ct-bg);
 }
 .ct-shell::after { /* corner accent, like the cut tab on the game's panels */
@@ -56,7 +62,8 @@
 .ct-bar {
   flex: none; display: flex; align-items: center; gap: 8px; height: 30px; margin: 1px 1px 0;
   padding: 0 calc(var(--ct-cut) + 6px) 0 10px;
-  background: linear-gradient(90deg, var(--ct-red), #f5544c 70%, rgba(245, 84, 76, .82));
+  background: linear-gradient(90deg, var(--ct-red), color-mix(in srgb, var(--ct-red) 94%, black) 70%, color-mix(in srgb, var(--ct-red) 82%, transparent));
+  border-radius: var(--ct-radius) var(--ct-radius) 0 0;
   color: var(--ct-ink); cursor: grab; user-select: none;
   clip-path: polygon(0 0, calc(100% - var(--ct-cut)) 0, 100% var(--ct-cut), 100% 100%, 0 100%);
 }
@@ -65,7 +72,7 @@
 .ct-bar-title { font-weight: 700; font-size: 15px; letter-spacing: .12em; text-transform: uppercase; white-space: nowrap; }
 .ct-bar-meta { font: 12px var(--ct-mono); letter-spacing: .06em; opacity: .78; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
 .ct-bar-spacer { flex: 1; }
-.ct-bar .ct-ibtn { color: var(--ct-ink); border-color: rgba(22, 6, 10, .55); }
+.ct-bar .ct-ibtn { color: var(--ct-ink); border-color: color-mix(in srgb, var(--ct-ink) 55%, transparent); }
 .ct-bar .ct-ibtn:hover { background: var(--ct-ink); color: var(--ct-red); }
 
 /* ================================================================ buttons */
@@ -122,8 +129,8 @@
 .ct-row.overdue { border-left-color: var(--ct-yellow); }
 .ct-row.done .ct-title { color: var(--ct-text-dim); text-decoration: line-through; text-decoration-color: var(--ct-line); }
 .ct-row.done { opacity: .78; }
-.ct-title { flex: 1; min-width: 0; font-size: 16px; font-weight: 500; color: var(--ct-text); overflow-wrap: anywhere; cursor: default; }
-.ct-row:hover .ct-title { color: #ffc2bb; }
+.ct-title { flex: 1 1 auto; min-width: 45%; font-size: 16px; font-weight: 500; color: var(--ct-text); overflow-wrap: anywhere; cursor: default; }
+.ct-row:hover .ct-title { color: var(--ct-text-strong); }
 .ct-title-input {
   flex: 1; min-width: 0; font: 500 16px var(--ct-font); color: var(--ct-cyan); background: var(--ct-cyan-fill);
   border: 0; outline: 1px solid var(--ct-cyan-dim); padding: 2px 6px; letter-spacing: .02em;
@@ -141,13 +148,14 @@
 .ct-row.overdue .ct-check::before { border-color: var(--ct-yellow); }
 .ct-row.skipped .ct-check::before { border-style: dashed; border-color: var(--ct-text-dim); }
 
-.ct-tags { display: flex; gap: 5px; flex: none; align-items: center; }
+.ct-tags { display: flex; gap: 5px; flex: 0 1 auto; min-width: 0; align-items: center; justify-content: flex-end; }
 .ct-tag {
   font: 10px/1 var(--ct-mono); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap;
+  min-width: 0; overflow: hidden; text-overflow: ellipsis; flex: 0 1 auto;
   padding: 3px 5px 2px; color: var(--ct-red); border: 1px solid var(--ct-line-dim);
 }
 .ct-tag.cyan { color: var(--ct-cyan); border-color: var(--ct-cyan-dim); }
-.ct-tag.yellow { color: var(--ct-yellow); border-color: rgba(252, 238, 10, .45); }
+.ct-tag.yellow { color: var(--ct-yellow); border-color: color-mix(in srgb, var(--ct-yellow) 45%, transparent); }
 .ct-tag.solid { background: var(--ct-yellow); color: var(--ct-ink); border-color: var(--ct-yellow); }
 .ct-x {
   width: 20px; height: 20px; display: grid; place-items: center; flex: none; color: var(--ct-text-dim);
@@ -185,7 +193,7 @@
   flex: none; display: flex; align-items: center; gap: 10px; height: 26px; padding: 0 calc(var(--ct-cut) + 4px) 2px 14px;
   font: 9px var(--ct-mono); letter-spacing: .1em; color: var(--ct-text-dim); text-transform: uppercase; white-space: nowrap; overflow: hidden;
 }
-.ct-micro .bars { width: 46px; height: 9px; flex: none; opacity: .7;
+.ct-micro .bars { display: var(--ws-decor, inline-block); width: 46px; height: 9px; flex: none; opacity: .7;
   background: repeating-linear-gradient(90deg, var(--ct-red) 0 1px, transparent 1px 3px, var(--ct-red) 3px 5px, transparent 5px 6px, var(--ct-red) 6px 7px, transparent 7px 10px); }
 .ct-micro .grow { flex: 1; overflow: hidden; text-overflow: ellipsis; }
 .ct-micro .warn { color: var(--ct-red); }
@@ -211,7 +219,7 @@
   display: flex; align-items: center; justify-content: center; gap: 12px; height: 46px;
   background: var(--ct-yellow); color: var(--ct-ink); transform: skewY(-3deg);
   font-weight: 700; font-size: 20px; letter-spacing: .2em; text-transform: uppercase;
-  box-shadow: 0 0 30px rgba(252, 238, 10, .35);
+  box-shadow: 0 0 30px color-mix(in srgb, var(--ct-yellow) 35%, transparent);
   animation: ct-banner 2.6s cubic-bezier(.2, .9, .3, 1) forwards;
 }
 .ct-banner small { font: 11px var(--ct-mono); letter-spacing: .1em; opacity: .7; }
@@ -303,7 +311,7 @@
 /* ================================================================ ROUTINES editor (the settings screen) */
 .ct-ed {
   position: absolute; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center;
-  background: radial-gradient(80% 80% at 50% 40%, rgba(40, 8, 12, .55), rgba(8, 2, 4, .82));
+  background: radial-gradient(80% 80% at 50% 40%, color-mix(in srgb, var(--ct-bg) 60%, transparent), color-mix(in srgb, var(--ct-bg) 92%, black));
   animation: ct-in .18s ease-out;
 }
 .ct-ed-win {
@@ -318,7 +326,7 @@
 .ct-tab.on { color: var(--ct-cyan); text-shadow: 0 0 10px var(--ct-cyan-dim); }
 .ct-ed-body { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(220px, 34%) 1fr; gap: 14px; padding: 6px 22px 10px; }
 .ct-ed-body.even { grid-template-columns: 1fr 1fr; }
-.ct-ed-col { position: relative; min-height: 0; display: flex; flex-direction: column; box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: rgba(10, 2, 4, .35); }
+.ct-ed-col { position: relative; min-height: 0; display: flex; flex-direction: column; box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: color-mix(in srgb, var(--ct-bg) 40%, transparent); }
 .ct-ed-col::before { /* cyan top rule like the settings sections */
   content: ""; position: absolute; left: 0; right: 0; top: 0; height: 1px; background: linear-gradient(90deg, var(--ct-cyan-dim), transparent 80%);
 }
@@ -334,7 +342,7 @@
 .ct-ed-item.paused b { text-decoration: line-through; }
 .ct-ed-form { flex: 1; min-height: 0; overflow-y: auto; padding: 4px 16px 12px; scrollbar-width: thin; scrollbar-color: var(--ct-line-dim) transparent; }
 .ct-ed-blank { margin: auto; text-align: center; color: var(--ct-text-dim); letter-spacing: .1em; text-transform: uppercase; }
-.ct-field { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px; padding: 4px 0; border-bottom: 1px solid rgba(255, 93, 85, .08); }
+.ct-field { display: flex; align-items: center; justify-content: space-between; gap: 16px; min-height: 40px; padding: 4px 0; border-bottom: 1px solid color-mix(in srgb, var(--ct-red) 8%, transparent); }
 .ct-field > label { font-size: 15px; font-weight: 500; color: var(--ct-red); letter-spacing: .04em; }
 .ct-field .ct-value { display: flex; align-items: center; gap: 8px; }
 .ct-field .ct-text-input {
@@ -347,7 +355,7 @@
 
 .ct-sel { /* ◁  value  ▷ */
   display: inline-flex; align-items: center; gap: 0; height: 30px; min-width: 210px;
-  box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: rgba(255, 93, 85, .04);
+  box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: color-mix(in srgb, var(--ct-red) 4%, transparent);
 }
 .ct-sel button { width: 30px; height: 100%; display: grid; place-items: center; color: var(--ct-red); }
 .ct-sel button:hover { color: var(--ct-cyan); background: var(--ct-cyan-fill); }
@@ -359,7 +367,7 @@
   display: inline-flex; align-items: center; gap: 12px; font-weight: 700; font-size: 13px; letter-spacing: .1em; color: var(--ct-red); text-transform: uppercase;
 }
 .ct-toggle i {
-  position: relative; width: 62px; height: 24px; box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: rgba(10, 2, 4, .5);
+  position: relative; width: 62px; height: 24px; box-shadow: inset 0 0 0 1px var(--ct-line-dim); background: color-mix(in srgb, var(--ct-bg) 55%, transparent);
 }
 .ct-toggle i::before {
   content: ""; position: absolute; top: 3px; bottom: 3px; left: 3px; width: 26px; background: var(--ct-red);
