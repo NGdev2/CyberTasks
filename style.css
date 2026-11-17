@@ -308,6 +308,9 @@
   background: var(--ct-cyan); box-shadow: 0 0 16px var(--ct-cyan-dim); transform: translate(-50%, -60%) rotate(-2deg);
 }
 
+.ct-week.ct-plan .ct-obj, .ct-week.ct-plan .ct-days { display: none; }
+.ct-week:not(.ct-plan) .ct-plan-only { display: none; }
+
 /* ================================================================ ROUTINES editor (the settings screen) */
 .ct-ed {
   position: absolute; inset: 0; z-index: 25; display: flex; align-items: center; justify-content: center;

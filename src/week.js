@@ -1,4 +1,6 @@
-// Week view: objectives for the week + seven day columns. One-off jobs can be dragged between days.
+// Week view, two modes:
+//  - "plan" (default, compact like Daily Jobs): the goals planned for the week
+//  - "schedule": week goals + seven day columns; one-off jobs can be dragged between days
 import { todayKey, weekKey, addWeeks, addDays, weekOverview, addItem, moveOnce } from './schedule.js';
 import { h, ICON, iconBtn, WEEKDAYS, dayNum, shortDate, weekNumber } from './ui.js';
 import { taskRow, celebrate } from './rows.js';
@@ -6,13 +8,17 @@ import { taskRow, celebrate } from './rows.js';
 export function mountWeek(app) {
   const { ctx, store, root } = app;
   let wk = weekKey(todayKey());
+  let mode = ctx.storage.get('weekMode', 'plan');
+  const SIZES = { plan: { w: 330, h: 380 }, schedule: { w: 940, h: 360 } };
 
   const meta = h('span', { class: 'ct-bar-meta' });
   const nowBtn = h('button', { class: 'ct-ibtn text', title: 'Back to this week', onclick: () => go(weekKey(todayKey())) }, 'NOW');
   const expandBtn = iconBtn('expand', 'Expand', () => ctx.frame.toggleExpand());
+  const title = h('span', { class: 'ct-bar-title' });
+  const modeBtn = h('button', { class: 'ct-ibtn text', onclick: () => setMode(mode === 'plan' ? 'schedule' : 'plan') });
   const bar = h('header', { class: 'ct-bar', 'data-ws-drag': '' },
-    h('i', { class: 'ct-bar-icon' }), h('span', { class: 'ct-bar-title' }, 'Weekly Schedule'), meta,
-    h('span', { class: 'ct-bar-spacer' }), nowBtn,
+    h('i', { class: 'ct-bar-icon' }), title, meta,
+    h('span', { class: 'ct-bar-spacer' }), nowBtn, modeBtn,
     iconBtn('prev', 'Previous week', () => go(addWeeks(wk, -1))),
     iconBtn('next', 'Next week', () => go(addWeeks(wk, 1))),
     iconBtn('gear', 'Routines and options', () => app.openEditor({ tab: 'routines' })),
@@ -22,7 +28,38 @@ export function mountWeek(app) {
   const objList = h('div', { class: 'ct-obj-list' });
   const days = h('div', { class: 'ct-days' });
   const micro = h('div', { class: 'ct-micro' }, h('i', { class: 'bars' }), h('span', { class: 'grow' }), h('span', { class: 'warn' }));
-  root.append(h('div', { class: 'ct-shell' }), bar, h('section', { class: 'ct-obj' }, objLabel, objList), days, micro);
+  // plan mode: the week's goals as a list, like Daily Jobs
+  const planCount = h('div', { class: 'ct-count' });
+  const planSeg = h('div', { class: 'ct-seg' });
+  const planList = h('div', { class: 'ct-list ct-plan-only' });
+  const planInput = h('input', { class: 'ct-input', placeholder: 'Add week goal', maxlength: 160 });
+  const planForm = h('form', { class: 'ct-add ct-plan-only' }, h('span', { class: 'ct-add-prompt' }, '>'), planInput,
+    iconBtn('plus', 'Add', () => planForm.requestSubmit()));
+  planForm.onsubmit = (ev) => {
+    ev.preventDefault();
+    const t = planInput.value.trim();
+    if (!t) return;
+    planInput.value = '';
+    store.mutate((db) => addItem(db, { order: Date.now(), title: t, scope: 'week', repeat: { type: 'once', week: wk } }));
+  };
+  root.append(h('div', { class: 'ct-shell' }), bar,
+    h('div', { class: 'ct-sub ct-plan-only' }, planCount, planSeg), h('div', { class: 'ct-rule ct-plan-only' }), planList, planForm,
+    h('section', { class: 'ct-obj' }, objLabel, objList), days, micro);
+
+  // Each mode keeps its own size: switching resizes the widget (unless it is full screen).
+  function setMode(next) {
+    if (!ctx.frame.isExpanded()) {
+      const r = ctx.frame.getRect();
+      ctx.storage.set('size_' + mode, { w: r.w, h: r.h });
+      const s = ctx.storage.get('size_' + next, SIZES[next]);
+      ctx.frame.resize(s.w, s.h);
+    }
+    mode = next;
+    ctx.storage.set('weekMode', mode);
+    render();
+  }
+  // Existing big instances open in the new compact default.
+  if (mode === 'plan' && !ctx.storage.get('size_plan') && ctx.frame.getRect().w > 600) ctx.frame.resize(SIZES.plan.w, SIZES.plan.h);
 
   // Inline "add" input used by objectives and day columns.
   function inlineAdd(container, placeholder, onAdd, cls = 'ct-add') {
@@ -47,6 +84,24 @@ export function mountWeek(app) {
     meta.innerHTML = `<b>W${weekNumber(wk)}</b> · ${shortDate(first)} — ${shortDate(last)}`;
     nowBtn.style.display = wk === weekKey(today) ? 'none' : '';
     expandBtn.innerHTML = ICON[ctx.frame.isExpanded() ? 'collapse' : 'expand'];
+    root.classList.toggle('ct-plan', mode === 'plan');
+    title.textContent = mode === 'plan' ? 'Week Plan' : 'Weekly Schedule';
+    modeBtn.textContent = mode === 'plan' ? '7D' : 'PLAN';
+    modeBtn.title = mode === 'plan' ? 'Show the 7-day schedule' : 'Show only the week plan';
+    if (mode === 'plan') {
+      const goals = ov.objectives;
+      const active = goals.filter((e) => !e.skipped);
+      const done = active.filter((e) => e.done).length;
+      planCount.innerHTML = `<b>${String(done).padStart(2, '0')}</b><span class="of">/${String(active.length).padStart(2, '0')}</span>Goals`;
+      planSeg.replaceChildren(...Array.from({ length: Math.max(active.length, 1) }, (_, i) => h('i', { class: i < done ? 'on' : '' })));
+      const sorted = [...goals].sort((a, b) => (store.prefs.doneAtBottom ? (a.done || a.skipped) - (b.done || b.skipped) : 0));
+      planList.replaceChildren(...(sorted.length ? sorted.map((e) => taskRow(app, e)) : [h('div', { class: 'ct-empty' }, h('b', {}, 'No plans yet'), 'What should this week achieve?')]));
+      const mt = ctx.ui.micro(today);
+      micro.children[1].textContent = `W${weekNumber(wk)} · ${mt.text}`;
+      micro.children[1].title = mt.title;
+      micro.children[2].textContent = active.length - done ? `${active.length - done} OPEN` : active.length ? 'CLEAR' : 'IDLE';
+      return;
+    }
 
     // objectives
     const objs = ov.objectives.filter((e) => !e.skipped);

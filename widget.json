@@ -9,9 +9,9 @@
     "style.css"
   ],
   "size": {
-    "w": 360,
-    "h": 440,
-    "minW": 280,
+    "w": 320,
+    "h": 380,
+    "minW": 260,
     "minH": 240
   },
   "frame": {
@@ -30,21 +30,21 @@
       "name": "Daily Jobs",
       "description": "Today's tasks: add, tick off, carry over. Routines appear on their days by themselves.",
       "size": {
-        "w": 360,
-        "h": 440,
-        "minW": 280,
+        "w": 320,
+        "h": 380,
+        "minW": 260,
         "minH": 240
       }
     },
     {
       "id": "week",
-      "name": "Weekly Schedule",
-      "description": "The whole week at a glance, plus week objectives. Plan ahead and drag tasks between days.",
+      "name": "Week Plan",
+      "description": "This week's goals, compact like Daily Jobs. One click switches to the full 7-day schedule, where you can drag tasks between days.",
       "size": {
-        "w": 940,
-        "h": 360,
-        "minW": 620,
-        "minH": 260
+        "w": 330,
+        "h": 380,
+        "minW": 260,
+        "minH": 240
       }
     }
   ],
