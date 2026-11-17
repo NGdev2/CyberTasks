@@ -74,7 +74,9 @@ export function mountWeek(app) {
         list, add);
       days.append(col);
     }
-    micro.children[1].textContent = microText(wk, 'WK_SCHED') + ` // ${wk}`;
+    const mt = microText(today);
+    micro.children[1].textContent = `W${weekNumber(wk)} · ${mt.text}`;
+    micro.children[1].title = mt.title;
     micro.children[2].textContent = open ? `${open} OPEN` : 'CLEAR';
   }
 

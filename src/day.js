@@ -79,7 +79,9 @@ export function mountDay(app) {
     }
 
     const left = active.length - done;
-    micro.children[1].textContent = microText(viewDate, 'DLY_OPS') + ` // ${viewDate.replaceAll('-', '.')}`;
+    const mt = microText(viewDate);
+    micro.children[1].textContent = mt.text;
+    micro.children[1].title = mt.title;
     micro.children[2].textContent = left ? `${left} PENDING` : active.length ? 'SYNC OK' : 'IDLE';
   }
 

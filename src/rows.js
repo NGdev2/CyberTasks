@@ -93,7 +93,7 @@ export function celebrate(app, text = 'ALL JOBS COMPLETE') {
   const { root, ctx } = app;
   if (!app.store.prefs.celebrate) return;
   root.querySelector('.ct-banner')?.remove();
-  const band = h('div', { class: 'ct-banner' }, text, h('small', {}, '+ STREET CRED'));
+  const band = h('div', { class: 'ct-banner' }, text, h('small', {}, 'EXIT 0'));
   root.append(band);
   ctx.after(2700, () => band.remove());
   const r = root.getBoundingClientRect();
