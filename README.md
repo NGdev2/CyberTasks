@@ -1,12 +1,22 @@
 # CyberTasks
 
-A productivity widget for [WidgetSystem](https://github.com/NGdev2/WidgetSystem) in the
-style of Cyberpunk 2077's UI. Two views share one database:
+**Daily jobs, week plans and routines that repeat by themselves, right on your desktop.**
+A productivity widget in the Night Cron style (dark panels, red frames, cyan selection), built
+for [WidgetSystem](https://github.com/NGdev2/WidgetSystem). It also runs standalone with `./run.sh`.
+
+<p>
+  <img src="docs/media/cybertasks-day.png" alt="Daily Jobs" height="320">
+  <img src="docs/media/cybertasks-week.png" alt="Weekly Schedule" height="320">
+</p>
+
+Two views share one database:
 
 - **Daily Jobs**: today's tasks. Add with the input, tick the diamond, right-click a row for
-  more (skip, move to tomorrow, rename, make it a routine). Browse other days with ◁ ▷.
-- **Weekly Schedule**: the whole week (Mon–Sun) plus **week objectives**. Add a job to any
-  day, drag one-off jobs between days, plan ahead with ◁ ▷.
+  more (skip, move to tomorrow, rename, make it a routine). Unfinished one-off tasks carry over
+  as *overdue*. Browse other days with ◁ ▷. Finish everything for an `ALL JOBS COMPLETE · EXIT 0` banner.
+- **Week Plan**: the goals you planned for this week, as compact as Daily Jobs. Press **7D**
+  for the full **Weekly Schedule**: seven day columns and the week's goals. Add a job to any
+  day, drag one-off jobs between days, and plan ahead with ◁ ▷.
 
 **Routines** (⚙ or right-click → Routines…) repeat by themselves and appear on their days:
 
@@ -22,6 +32,8 @@ style of Cyberpunk 2077's UI. Two views share one database:
 Each routine can have a start date, an end date and a pause switch. The editor previews its
 next dates and shows its streak.
 
+![Routines editor](docs/media/routines-editor.png)
+
 **Options:** carry over unfinished jobs, completed jobs at the bottom, morning briefing and
 evening reminder notifications, celebration banner, glitch effects, decorative elements.
 
@@ -35,7 +47,7 @@ git clone https://github.com/NGdev2/CyberTasks && cd CyberTasks
 ```
 
 **Inside [WidgetSystem](https://github.com/NGdev2/WidgetSystem)**, next to your other widgets:
-open ✦ → Navigator… → CyberTasks → Install, then add "Daily Jobs" and "Weekly Schedule". Or from a terminal:
+open ✦ → Navigator… → CyberTasks → Install, then add "Daily Jobs" and "Week Plan". Or from a terminal:
 
 ```bash
 widgetctl install cybertasks
