@@ -25,18 +25,25 @@ next dates and shows its streak.
 **Options:** carry over unfinished jobs, completed jobs at the bottom, morning briefing and
 evening reminder notifications, celebration banner, glitch effects, decorative elements.
 
-## Install
+## Run it
+
+**Standalone** (no WidgetSystem needed; Linux with Python 3, GTK 3 and WebKit2GTK 4.1, preinstalled on Ubuntu 22.04+):
 
 ```bash
-widgetctl path add /path/to/CyberTasks
-widgetctl add cybertasks:day
-widgetctl add cybertasks:week
+git clone https://github.com/NGdev2/CyberTasks && cd CyberTasks
+./run.sh            # ./run.sh stop to stop it, ./run.sh theme glass to switch the look
 ```
 
-Or use the WidgetSystem gallery (✦ → Add widget…): "Daily Jobs" and "Weekly Schedule".
+**Inside [WidgetSystem](https://github.com/NGdev2/WidgetSystem)**, next to your other widgets:
+open ✦ → Navigator… → CyberTasks → Install, then add "Daily Jobs" and "Weekly Schedule". Or from a terminal:
+
+```bash
+widgetctl install cybertasks
+widgetctl add cybertasks:day && widgetctl add cybertasks:week
+```
 
 From scripts: `widgetctl send cybertasks '{"add":"Buy milk"}'` adds a job for today, and
-`'{"open":"routines"}'` opens the editor.
+`'{"open":"routines"}'` opens the editor. (When it runs standalone, use `./run.sh send …`.)
 
 ## Development
 
@@ -44,6 +51,7 @@ From scripts: `widgetctl send cybertasks '{"add":"Buy milk"}'` adds a job for to
   [docs/DATA_MODEL.md](docs/DATA_MODEL.md). Run the tests with `npm test` (`node --test`, no dependencies).
 - `src/day.js`, `src/week.js`, `src/editor.js` and `src/rows.js` are the views. `style.css`
   is the design kit.
+- `solo/` is the bundled runner (a copy of WidgetSystem, made by `widgetctl export-solo`); don't edit it.
 - Saving any file hot-reloads the widget. Data lives in WidgetSystem's storage
   (`~/.local/share/widgetsystem/storage/w-cybertasks.json`).
 
