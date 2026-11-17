@@ -86,6 +86,12 @@ export function openEditor(app, opts = {}) {
   ed.addEventListener('contextmenu', (e) => { e.preventDefault(); e.stopPropagation(); });
   ed.addEventListener('pointerdown', (e) => { if (e.target === ed) close(); });
   root.append(ed);
+  // Tears (characters ripping a full-screen panel) may only happen around the editor, never over it.
+  const protectEditor = () => {
+    const r = win.getBoundingClientRect(), c = root.getBoundingClientRect();
+    ctx.frame.protect?.([{ x: r.left - c.left - 8, y: r.top - c.top - 8, w: r.width + 16, h: r.height + 16 }]);
+  };
+  requestAnimationFrame(protectEditor);
 
   let listEl, formEl;
   const editingText = () => {
@@ -346,6 +352,7 @@ export function openEditor(app, opts = {}) {
     closed = true;
     unsub(); offKey(); offCollapse(); stopBeat();
     ctx.storage.delete('editor');
+    ctx.frame.protect?.([]);
     ed.remove();
     if (expandedByUs && !fromCollapse) ctx.frame.collapse();
   }
