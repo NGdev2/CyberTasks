@@ -20,7 +20,8 @@
     "shadow": false,
     "radius": 0,
     "padding": 0,
-    "controls": false
+    "controls": false,
+    "dragAnywhere": false
   },
   "expandable": true,
   "multiInstance": true,
